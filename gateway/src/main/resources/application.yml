@@ -1,0 +1,34 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: healthflow-gateway
+  cloud:
+    gateway:
+      server:
+        webflux:
+          routes:
+            - id: patient-service
+              uri: ${PATIENT_SERVICE_URL:http://localhost:8082}
+              predicates:
+                - Path=/api/v1/patients/**
+
+            - id: doctor-service
+              uri: ${DOCTOR_SERVICE_URL:http://localhost:8083}
+              predicates:
+                - Path=/api/v1/doctors/**
+
+            - id: appointment-service
+              uri: ${APPOINTMENT_SERVICE_URL:http://localhost:8084}
+              predicates:
+                - Path=/api/v1/appointments/**
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+  endpoint:
+    health:
+      show-details: never
